@@ -15,11 +15,9 @@ import org.keycloak.provider.ProviderConfigProperty;
 import org.keycloak.provider.ProviderConfigurationBuilder;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.util.List;
 
 public class DatabaseFederationSAMLAttributeMapper extends AbstractSAMLProtocolMapper
@@ -132,7 +130,7 @@ public class DatabaseFederationSAMLAttributeMapper extends AbstractSAMLProtocolM
         String dbUser = mappingModel.getConfig().get(CONFIG_DB_USER);
         String dbPassword = mappingModel.getConfig().get(CONFIG_DB_PASSWORD);
 
-        try (Connection conn = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+        try (Connection conn = DataSourceProvider.getInstance().getDataSource(dbUrl, dbUser, dbPassword).getConnection();
             PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, userId);
@@ -163,7 +161,7 @@ public class DatabaseFederationSAMLAttributeMapper extends AbstractSAMLProtocolM
                     LOG.warnf("No DB results for user %s (id=%s)", user.getUsername(), userId);
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             LOG.errorf(e, "Failed to fetch DB attributes for user %s (id=%s)", user.getUsername(), userId);
         }
     }
