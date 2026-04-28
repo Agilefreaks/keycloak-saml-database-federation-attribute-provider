@@ -39,8 +39,8 @@ Add the **Database Attribute Mapper** protocol mapper to a SAML client with:
 
 | Property | Description |
 |----------|-------------|
-| Database URL | JDBC connection URL (supports `${ENV_VAR}` syntax) |
-| Database User | Database username (supports `${ENV_VAR}` syntax) |
-| Database Password | Database password (supports `${ENV_VAR}` syntax) |
+| Database URL | JDBC connection URL |
+| Database User | Database username |
+| Database Password | Database password |
 | SQL Query | Query with `?` placeholder for user ID. Column aliases become attribute names. |
-| User ID Attribute | Keycloak user attribute containing the external user ID (default: `LDAP_ID`) |
+| User ID Attribute | Keycloak user attribute containing the external user ID (default: `external_id`) |
