@@ -20,7 +20,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <keycloak.version>26.4.0</keycloak.version>
+        <keycloak.version>26.7.5</keycloak.version>
     </properties>
 
     <dependencies>
@@ -69,6 +69,20 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>5.1.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Shipped by Keycloak: use its copy, a bundled one shadows it on the shared classpath -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.17</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Test dependencies -->
@@ -167,6 +181,23 @@
                         -XX:+EnableDynamicAgentLoading
                     </argLine>
                 </configuration>
+            </plugin>
+            <plugin>
+                <!-- Runs *IT tests after package, against the assembled jar -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <useModulePath>false</useModulePath>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
